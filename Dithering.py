@@ -124,6 +124,24 @@ def topl_serpentine_dither(img, nc, l_r_mat, r_l_mat):
     return np.array(arr * 255, dtype=np.uint8)
 
 
+def topl_botr_dither_half(img, nc, mat):
+    arr = np.array(img, dtype= float) / 255
+    tmp_h, tmp_w = len(arr), len(arr[0])
+    for row in range(tmp_h):
+        for col in range(tmp_w):
+            #Update new color value for each pixel
+            old_val = arr[row, col].copy()
+            new_val = new_pixel_val(old_val, nc)
+            print(new_val)
+            arr[row, col] = new_val
+            
+            #Distribute "error"
+            diff = old_val - new_val
+            dist_error(row, col, diff, arr, mat)
+            
+    return np.array(arr * 255, dtype=np.uint8)
+
+
 def palette_reduce(img, nc):
     #Simple palette reduction without dithering
     arr = np.array(img, dtype=float) / 255
